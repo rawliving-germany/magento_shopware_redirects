@@ -6,6 +6,7 @@
 
 require 'optparse'
 
+require_relative './lib/db.rb'
 require_relative './lib/magento_db.rb'
 require_relative './lib/magento_products.rb'
 require_relative './lib/memstore.rb'
@@ -18,7 +19,8 @@ db_conf = {
   username: nil,
   password: nil,
   magentodb: nil,
-  shopwaredb: nil
+  shopwaredb: nil,
+  limit: -1
 }
 
 option_parser = OptionParser.new do |opts|
@@ -43,9 +45,17 @@ option_parser = OptionParser.new do |opts|
     db_conf[:password] = dbpass
   end
 
+  opts.on("-l", "--limit LIMIT", Integer, 'For debugging purposes, limit the SQL query (will result in incomplete data)') do |l|
+    DB::limit = l.abs
+    db_conf[:limit] = l
+  end
+
   opts.on("-h", "--help", 'Show help and exit') do
     puts opts
     exit 0
+  end
+  opts.on("-v", "--verbose", 'Verbose logging') do |v|
+    MagentoShopwareRedirect::logger.level = Logger::DEBUG
   end
 end
 option_parser.parse!

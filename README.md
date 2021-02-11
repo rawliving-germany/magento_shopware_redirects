@@ -15,6 +15,8 @@ sitemap generation is messed up.
 
 Magentos URLs reflect the productId in our case, but we have access to the SKU.
 
+It will only work with MySQL/MariaDB installations.
+
 ## Scope
 
 Following URLs should be redirected:
