@@ -7,6 +7,7 @@
 require 'optparse'
 
 require_relative './lib/db.rb'
+require_relative './lib/db_credentials.rb'
 require_relative './lib/magento_db.rb'
 require_relative './lib/magento_products.rb'
 require_relative './lib/memstore.rb'
@@ -16,10 +17,8 @@ require_relative './lib/shopware_db.rb'
 require_relative './lib/shopware_products.rb'
 
 db_conf = {
-  username: nil,
-  password: nil,
-  magentodb: nil,
-  shopwaredb: nil,
+  magentodb:  DBCredentials.new(host: '127.0.0.1', port: 3306),
+  shopwaredb: DBCredentials.new(host: '127.0.0.1', port: 3306),
   limit: -1
 }
 
@@ -29,20 +28,22 @@ option_parser = OptionParser.new do |opts|
 
   opts.separator "Shopware configuration"
   opts.on("", "--shopwaredb DATABASENAME", 'Connect to a shopware5 database called DATABASENAME') do |shopwaredb|
-    db_conf[:shopwaredb] = shopwaredb
+    db_conf[:shopwaredb].databasename = shopwaredb
   end
 
   opts.separator "Magento configuration"
   opts.on("", "--magentodb DATABASENAME", 'Connect to a magento2 database called DATABASENAME') do |magentodb|
-    db_conf[:magentodb] = magentodb
+    db_conf[:magentodb].databasename = magentodb
   end
 
   opts.separator "General options"
   opts.on("", "--dbuser DATABASEUSER", 'Use DATABASEUSER to connect to the databases') do |dbuser|
-    db_conf[:username] = dbuser
+    db_conf[:shopwaredb].username = dbuser
+    db_conf[:magentodb].username  = dbuser
   end
   opts.on("", "--dbpass DATABASEPASSWORD", 'Use DATABASEPASSWORD to connect to the databases') do |dbpass|
-    db_conf[:password] = dbpass
+    db_conf[:shopwaredb].password = dbpass
+    db_conf[:magentodb].password = dbpass
   end
 
   opts.on("-l", "--limit LIMIT", Integer, 'For debugging purposes, limit the SQL query (will result in incomplete data)') do |l|
@@ -60,21 +61,22 @@ option_parser = OptionParser.new do |opts|
 end
 option_parser.parse!
 
-if db_conf.values.include? nil
+if ! (db_conf[:magentodb].given? && db_conf[:shopwaredb].given?)
   STDERR.puts "Please provide all database-related options"
   puts db_conf.inspect
   puts option_parser
   exit 1
 end
 
-magento_db = MagentoDB.new(db_conf[:username], db_conf[:password], db_conf[:magentodb])
+
+magento_db = MagentoDB.new(db_conf[:magentodb])
 
 magento_products = magento_db.products
 
 mem = Memstore.new(Product)
 mem.add_all magento_products
 
-shopware_db = ShopwareDB.new(db_conf[:username], db_conf[:password], db_conf[:shopwaredb])
+shopware_db = ShopwareDB.new(db_conf[:shopwaredb])
 shopware_products = shopware_db.merge_products mem
 
 puts mem.objs.select(&:in_magento_and_shopware?).count
