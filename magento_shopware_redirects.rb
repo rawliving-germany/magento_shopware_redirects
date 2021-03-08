@@ -6,6 +6,8 @@
 
 require 'optparse'
 
+require_relative './lib/magento_shopware_redirect'
+
 require_relative './lib/db.rb'
 require_relative './lib/db_credentials.rb'
 require_relative './lib/magento_db.rb'
@@ -68,6 +70,9 @@ if ! (db_conf[:magentodb].given? && db_conf[:shopwaredb].given?)
   exit 1
 end
 
+if db_conf[:limit] > 0
+  MagentoShopwareRedirect::logger.warn "Limit set to #{db_conf[:limit]} - will result in incomplete data"
+end
 
 magento_db = MagentoDB.new(db_conf[:magentodb])
 
