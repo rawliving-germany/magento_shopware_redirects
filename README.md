@@ -47,14 +47,22 @@ It is assumed that magento and shopware share the same database server.
 
   * Adobe Magento Catalog URL documentation: https://docs.magento.com/user-guide/catalog/catalog-urls.html
   * In case you forgot, 302 redirects are temporary (safe to try), while 301
-    redirects (permament) will make your browser not hitting the original URL
+    redirects (permanent) will make your browser not hitting the original URL
     ever again.
   * using connection strings might make db conf easier: `DATABASE_URL=mysql2://sql_user:sql_pass@sql_host_name:port/sql_db_name?option1=value1&option2=value2`.
+  * Delegation and Forwardable is discussed here: https://blog.appsignal.com/2019/04/30/ruby-magic-hidden-gems-delegator-forwardable.html
 
 #### Memstore
 
 A stupid multi-index memory store is implemented in
 [lib/memstore.rb](lib/memstore.rb) .
+Some basic tests included in `test/`.
+
+The idea is to keep hashtables that allow quick access to objects by attribute,
+thinks of half-memoized `objects.select{|obj| obj.attribute = attribute_value}`.
+Alternative would be an external dependency and e.g. an in-memory sqlite3 or
+berkely-db.
+
 
 ### Database
 
