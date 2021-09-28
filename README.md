@@ -22,8 +22,11 @@ It will only work with MySQL/MariaDB installations.
 Following URLs should be redirected:
 
   * search queries (for some reason some of our search queries are google indexed pretty well)
-    * https://shopware/search?sSearch=searchterm
+    * __magento:__  https://magento/s
+    * __shopware:__ https://shopware/search?sSearch=searchterm
+    * --> **dropped that idea**
   * categories
+    * --> **manually with some redirect plugin**
   * products:
     https://SHOP/catalog/product/view/id/3334/*
     https://SHOP/catalog/product/view/id/3334/s/*
@@ -31,8 +34,10 @@ Following URLs should be redirected:
     https://SHOP/catalog/product/view/id/3334/s/hefeflocken-auf-malzbasis-bio-250g.html
     but sometimes:
     https://SHOP/nama-gersten-miso-bio-250g.html
--> 
+    * --> that we will do
   * static pages
+    * --> **not yet implemented**
+  * ~~images: nope, we dont do that~~
 
 However, admin-access path should NOT be redirected.
   
