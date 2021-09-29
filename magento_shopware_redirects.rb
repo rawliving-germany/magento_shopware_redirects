@@ -24,6 +24,8 @@ db_conf = {
   limit: -1
 }
 
+url_prefix = ''
+
 option_parser = OptionParser.new do |opts|
   opts.banner = "Usage: #{$PROGRAM_NAME} [OPTIONS]"
   opts.separator ""
@@ -51,6 +53,10 @@ option_parser = OptionParser.new do |opts|
   opts.on("-l", "--limit LIMIT", Integer, 'For debugging purposes, limit the SQL query (will result in incomplete data)') do |l|
     DB::limit = l.abs
     db_conf[:limit] = l
+  end
+
+  opts.on("-u", "--url URL", 'Shopware URL to prefix to the redirects (your shops url)') do |url|
+    url_prefix = url
   end
 
   opts.on("-h", "--help", 'Show help and exit') do
