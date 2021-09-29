@@ -91,11 +91,15 @@ mem.add_all magento_products
 shopware_db = ShopwareDB.new(db_conf[:shopwaredb])
 shopware_products = shopware_db.merge_products mem
 
-puts mem.objs.select(&:in_magento_and_shopware?).count
+MagentoShopwareRedirect::logger.info "#{mem.objs.select(&:in_magento_and_shopware?).count} products with existence in both magento and shopware found"
 
-#puts mem.objs.inspect
+magento_db.add_urls mem
+shopware_db.add_urls mem
 
-puts Redirects.to_nginx
+#logger.debug mem.objs.select(&:urls_for_magento_and_shopware?).count
+
+puts ProductRedirects.to_nginx(mem.objs, url: url_prefix)
+puts StaticRedirects.to_nginx()
 
 # Exit with grace
 exit 0
