@@ -29,6 +29,15 @@ class Memstore
     index(attr)[value]
   end
 
+  # TODO API unclear
+  def find_with attr_value
+    if attr_value.count != 1
+      raise ArgumentError.new("find_with argument needs to be of form `attr: value`.")
+    end
+    attribute, value = attr_value.to_a.flatten
+    index(attribute)[value]
+  end
+
   # Assuming uniqe index
   def find_or_create_by attr:, value:
     index(attr)[value] ||= @obj_class.new(**{attr.to_sym => value})

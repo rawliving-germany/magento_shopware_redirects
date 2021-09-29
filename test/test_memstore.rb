@@ -25,6 +25,8 @@ class TestMemstore < MiniTest::Test
 
     memstore.add_all [obj1, obj2]
 
+    assert_equal obj1, memstore.find_with(name: 'Obj1')
+
     assert_equal obj1, memstore.find_by(attr: :name, value: 'Obj1')
     assert_equal obj2, memstore.find_by(attr: :name, value: 'Obj2')
 
