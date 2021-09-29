@@ -8,7 +8,7 @@ class ProductRedirects
     products_with_mapping(products).flat_map do |product|
       product.magento_urls.flat_map do |magento_url|
         "rewrite ^/#{magento_url}.*$ #{url}#{product.shopware_url} redirect;"
-      end# + [self.static_rules]
+      end
     end
   end
 
