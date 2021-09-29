@@ -23,4 +23,8 @@ class Product
   def in_shopware?
     @id_in_shopware
   end
+
+  def urls_for_magento_and_shopware?
+    @shopware_url && @magento_urls
+  end
 end
