@@ -6,6 +6,6 @@ require 'logger'
 
 module MagentoShopwareRedirect
   def self.logger
-    @@logger ||= Logger.new(STDOUT)
+    @@logger ||= Logger.new(STDERR)
   end
 end
