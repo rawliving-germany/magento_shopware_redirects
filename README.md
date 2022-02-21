@@ -64,7 +64,7 @@ A stupid multi-index memory store is implemented in
 Some basic tests included in `test/`.
 
 The idea is to keep hashtables that allow quick access to objects by attribute,
-thinks of half-memoized `objects.select{|obj| obj.attribute = attribute_value}`.
+think of half-memoized `objects.select{|obj| obj.attribute == attribute_value}`.
 Alternative would be an external dependency and e.g. an in-memory sqlite3 or
 berkely-db.
 
@@ -85,7 +85,7 @@ berkely-db.
 
 ## License
 
-Code is copyright 2021 Felix Wolfsteller and released under the AGPLv3+ which is
+Code is copyright 2021,2022 Felix Wolfsteller and released under the AGPLv3+ which is
 included in the [`LICENSE`](LICENSE) file in full text. The project should
 become [reuse](https://reuse.software) compliant.
 
