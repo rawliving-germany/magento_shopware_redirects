@@ -40,7 +40,12 @@ Following URLs should be redirected:
   * ~~images: nope, we dont do that~~
 
 However, admin-access path should NOT be redirected.
-  
+
+  * affiliate links (probably from plugin):
+    * __magento:__  https://magento/product?a_aid=9182b8723
+    * __shopware:__ https://shopware/product?sPartner=9182b8723
+    * apparently, the partner-id is fine, will not change/can be defined
+      manually.
 
 ## Usage
 
@@ -54,6 +59,7 @@ It is assumed that magento and shopware share the same database server.
   * In case you forgot, 302 redirects are temporary (safe to try), while 301
     redirects (permanent) will make your browser not hitting the original URL
     ever again.
+  * nginx models this as `rewrite FROM TO redirect|permamanent;` (last parameter)
   * using connection strings might make db conf easier: `DATABASE_URL=mysql2://sql_user:sql_pass@sql_host_name:port/sql_db_name?option1=value1&option2=value2`.
   * Delegation and Forwardable is discussed here: https://blog.appsignal.com/2019/04/30/ruby-magic-hidden-gems-delegator-forwardable.html
 
@@ -75,13 +81,40 @@ berkely-db.
 
   * `sku` in `catalag_product_entity`
   * there are shortforms of the articles in two varchar eav-attributes
+  * specific product URLs in `eav_attributes` `url_key` and `url_path`.
+    * per product: `catalog_product_entity_varchar` (`.value`) where
+      `attribute_id` matches these and `entity_id` matches the products
+`entity_id`
 
 #### Infos in Shopware DB
 
   * `sku` is in `s_articles_details` (`articleID` / `ordernumber`)
   * (relative) product URLs are in `s_core_rewrite_urls`, but need to be
-    downcased. Find from product id via `org_path` (e.g.
-`sViewport=detail&sArticle=122`).
+    downcased. Find from product id via `org_path` (e.g. `sViewport=detail&sArticle=122`).
+  * configurable articles have multiple s_article_details for the same articleId
+
+## "Architecture"
+(There was no prior architectural work, so this is rather a "what grew where"):
+
+
+### Code map
+
+```
+.
+├── lib
+│   ├── db_credentials.rb            # PORO for the two DB credentials
+│   ├── db.rb                        # DB driver (mysql shim) and base class
+│   ├── magento_db.rb                # Queries against magento DB and memstore
+│   ├── magento_shopware_redirect.rb # Module-wide functionality and conf
+│   ├── memstore.rb                  # in-mem selfbuild multi-directional cache
+│   ├── product.rb                   # Class for in-mem abstraction of a Product
+│   ├── product_redirects.rb         # Per Product Nginx redirect rule strings
+│   ├── shopware_db.rb               # Queries against shopware DB and memstore
+│   └── static_redirects.rb          # Static (non-product) redirect rule(s)
+├── magento_shopware_redirects.rb    # MAIN entry/script/exec
+└── test                             # Tests
+    └── test_memstore.rb             # Memstore Test
+```
 
 ## License
 
