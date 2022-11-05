@@ -7,7 +7,7 @@ require 'forwardable'
 # Hash-index array of stuff that is assumed to be rather immutable (no
 # live-reindexing)
 class Memstore
-  extend Forwardable
+  extend Forwardable # alternatively SimpleDelegator
 
   def_delegators :@objs, :count, :size
 

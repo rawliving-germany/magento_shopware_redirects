@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# In-Mem abstract Product
 class Product
   attr_accessor :id_in_shopware, :id_in_magento, :name, :sku, :shopware_url, :magento_urls
 

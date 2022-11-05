@@ -28,7 +28,7 @@ db_conf = {
 url_prefix = ''
 
 option_parser = OptionParser.new do |opts|
-  opts.banner = "Usage: #{$PROGRAM_NAME} [OPTIONS]"
+  opts.banner = "Usage: #{$PROGRAM_NAME} [OPTIONS] --url URL"
   opts.separator ""
 
   opts.separator "Shopware configuration"

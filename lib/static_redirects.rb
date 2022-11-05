@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# static nginx redirect rules
 class StaticRedirects
   def self.to_nginx
     self.static_rules
