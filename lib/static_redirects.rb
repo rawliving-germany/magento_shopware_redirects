@@ -9,17 +9,25 @@ class StaticRedirects
   end
 
   def self.static_rules
-    self.affiliate_redirect
+    self.affiliate_redirect + self.search_redirects
   end
 
   def self.affiliate_redirect
     rewrite_rule = <<~NGINX
       if ($query_string ~* "^a_aid=(?<affid>.*)$") {
-        rewrite ^(.*)$ $1Partner=$affid? redirect;
+        rewrite ^(.*)$ $1?Partner=$affid? redirect;
       }
     NGINX
 
     rewrite_rule
   end
-end
 
+  def self.search_redirects
+   rewrite_rule = <<~NGINX
+     rewrite ^/catalogsearch/result/index/?(?<searchstring>.*)$ /search?sSearch=$searchstring redirect;
+     rewrite ^/catalogsearch/result?(?<searchstring>.*)$ /search?sSearch=$searchstring redirect;
+   NGINX
+
+   rewrite_rule
+  end
+end
